@@ -17,6 +17,7 @@ void setup() {
   
   dso.begin();
   dso.fillScreen(BLACK);
+  dso.invertDisplay(2);
   //delay(1000);
 
   gameSetup();

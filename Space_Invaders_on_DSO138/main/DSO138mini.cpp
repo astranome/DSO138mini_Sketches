@@ -33,35 +33,40 @@ static const uint8_t DSO138mini_regValues[] PROGMEM = {
 void DSO138mini::begin(void)
 {
 	/*** For DSO138mini ***/
-  afio_cfg_debug_ports(AFIO_DEBUG_NONE);
-  // for LED
-  pinMode(PA15, OUTPUT);
-  // for USB D+
-  pinMode(PA7, OUTPUT);
-  digitalWrite(PA7,HIGH);
+    afio_cfg_debug_ports(AFIO_DEBUG_NONE);
+    // for LED
+    pinMode(PA15, OUTPUT);
+    // for USB D+
+    pinMode(PA7, OUTPUT);
+    digitalWrite(PA7,HIGH);
 	
 	/* Initialize LCD(ST7787) */
 	reset();
 	
 	uint8_t i = 0;
-  CS_ACTIVE;
-  while(i < sizeof(DSO138mini_regValues)) {
-    uint8_t r = pgm_read_byte(&DSO138mini_regValues[i++]);
-    uint8_t len = pgm_read_byte(&DSO138mini_regValues[i++]);
-    if(r == TFTLCD_DELAY) {
-      delay(len);
-    } else {
-		  //CS_ACTIVE;
-		  CD_COMMAND;
-		  write8(r);
-		  CD_DATA;
-		  for (uint8_t d=0; d<len; d++) {
-		    uint8_t x = pgm_read_byte(&DSO138mini_regValues[i++]);
-		    write8(x);
-		  }
+    CS_ACTIVE;
+    while(i < sizeof(DSO138mini_regValues)) {
+        uint8_t r = pgm_read_byte(&DSO138mini_regValues[i++]);
+        uint8_t len = pgm_read_byte(&DSO138mini_regValues[i++]);
+        if(r == TFTLCD_DELAY) {
+            delay(len);
+        } else {
+            //CS_ACTIVE;
+            CD_COMMAND;
+            write8(r);
+            CD_DATA;
+		  
+            for (uint8_t d=0; d<len; d++) {
+                uint8_t x = pgm_read_byte(&DSO138mini_regValues[i++]);
+                write8(x);
+            }
+        }
     }
-  }
-  CS_IDLE;
+    
+    // Rotate display
+    rotateDisplay(0x20);
+    
+    CS_IDLE;
 }
 
 /*****************************************************************************/
@@ -94,6 +99,13 @@ void  DSO138mini::reset(void)
 		delay(100);
 	}
 }
+
+void DSO138mini::rotateDisplay(uint8_t rotation)
+{
+    writeCommand(0x36); // Memory Access Control
+	CD_DATA;
+	write8(rotation);
+}    
 
 /*****************************************************************************/
 // Sets the LCD address window (and address counter, on 932X).

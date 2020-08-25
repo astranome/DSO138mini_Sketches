@@ -20,17 +20,17 @@
 
 //Control pins |RD |WR |RS |CS |RST|
 #define TFT_CNTRL_PORT	GPIOC
-#define TFT_RD			PB8    //PA0
+#define TFT_RD			PB10    //PA0
 #define TFT_WR			PC15   //PA1
 #define TFT_RS			PC14   //PA2
 #define TFT_CS			PC13   //PA3
 
-#define TFT_RD_MASK		BIT8  // digitalPinToBitMask(TFT_RD) // 
+#define TFT_RD_MASK		BIT10  // digitalPinToBitMask(TFT_RD) // 
 #define TFT_WR_MASK		BIT15 // digitalPinToBitMask(TFT_WR) // 
 #define TFT_RS_MASK		BIT14 // digitalPinToBitMask(TFT_RS) // 
 #define TFT_CS_MASK		BIT13 // digitalPinToBitMask(TFT_CS) // 
 
-#define TFT_RST			PB9   //PB10
+#define TFT_RST			PB11   //PB10
 
 #define SLOW_WRITE 0   // set to 1 for legacy slow write (using individual digitalWrite()s
 
@@ -213,6 +213,7 @@ class DSO138mini /* : public Adafruit_GFX */{
 			draw_ssd1306(int16_t x, int16_t y, int16_t w, int16_t h, byte * bitmap, uint16_t color, uint16_t bgcolor),
 			drawString(uint8_t *p, uint16_t x, uint16_t y, uint16_t color, uint16_t bgcolor, uint8_t size);
   uint8_t	readBtn(void);
+  void     rotateDisplay(uint8_t rotation);
   
 /*****************************************************************************/
 // Pass 8-bit (each) R,G,B, get back 16-bit packed color
